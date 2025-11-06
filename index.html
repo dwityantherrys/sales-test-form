@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEMBAR TEST Calon Salesman - PT. CATUR SENTOSA ADIPRANA Tbk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 8px 8px 0 0;
+            border-top: 10px solid #673ab7;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #202124;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .timer-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timer-section.warning {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .timer-text {
+            font-weight: 500;
+            color: #856404;
+        }
+
+        .timer-section.warning .timer-text {
+            color: #721c24;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #856404;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-section.warning .timer {
+            color: #721c24;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-label {
+            font-size: 16px;
+            color: #202124;
+            margin-bottom: 10px;
+            display: block;
+            line-height: 1.6;
+        }
+
+        .required {
+            color: #d93025;
+            margin-left: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #673ab7;
+            box-shadow: 0 0 0 3px rgba(103, 58, 183, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-section {
+            background: white;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .submit-btn {
+            background: #673ab7;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #5e35b1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(103, 58, 183, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: #d93025;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #673ab7;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .timer-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>LEMBAR TEST Calon Salesman</h1>
+            <p>PT. CATUR SENTOSA ADIPRANA Tbk Cabang Surabaya</p>
+            <p style="margin-top: 10px;">Silakan isi formulir berikut dengan lengkap dan jujur. Anda memiliki waktu 30 menit untuk menyelesaikan test ini.</p>
+        </div>
+
+        <div class="timer-section" id="timerSection">
+            <span class="timer-text">⏱️ Sisa Waktu:</span>
+            <span class="timer" id="timer">30:00</span>
+        </div>
+
+        <form id="essayForm">
+            <div class="form-section">
+                <div class="question">
+                    <label class="question-label">
+                        Nama Lengkap <span class="required">*</span>
+                    </label>
+                    <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap Anda">
+                    <div class="error-message" id="namaError"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        Posisi <span class="required">*</span>
+                    </label>
+                    <input type="text" id="posisi" name="posisi" required placeholder="Masukkan posisi yang dilamar">
+                    <div class="error-message" id="posisiError"></div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="question">
+                    <label class="question-label">
+                        1. Apa yang anda ketahui tentang produk Building Material yang dijual oleh PT. Catur Sentosa Adiprana Tbk? <span class="required">*</span>
+                    </label>
+                    <textarea id="question1" name="question1" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q1Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        2. Sebagai seorang sales, jika anda mendapati pelanggan tidak mau membeli produk anda, apa yang akan anda lakukan agar supaya toko tetap mau membeli produk anda? <span class="required">*</span>
+                    </label>
+                    <textarea id="question2" name="question2" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q2Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        3. Satu kendaraan expedisi mempunyai kapasitas muat barang 8000kg, jika 1dus keramik beratnya 16kg, hitunglah:<br>
+                        a. Jumlah dus yang bisa dimuat<br>
+                        b. Nilai penjualan jika 1dus-nya mempunyai harga Rp.56.500 <span class="required">*</span>
+                    </label>
+                    <textarea id="question3" name="question3" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q3Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        4. Produk cat merk Kansai memiliki daya sebar 12m2/liter dan 1galon-nya berisi 2,5liter. Jika suatu bidang dinding memiliki panjang 16meter dan tinggi 3meter, berapa galon yang dibutuhkan untuk mengecat bidang tersebut? <span class="required">*</span>
+                    </label>
+                    <textarea id="question4" name="question4" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q4Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        5. Harga 1pc kloset merk Global adalah sebesar Rp.80.000 dan satu peti berisi 5pcs. Toko A membeli 25peti mendapatkan diskon sebesar 5%, berapakah jumlah yang harus dibayar oleh toko A? <span class="required">*</span>
+                    </label>
+                    <textarea id="question5" name="question5" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q5Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        6. Jarak Surabaya - Mojokerto 33km. Rudi memiliki sepeda motor Honda th.2020 dengan konsumsi bahan bakar 34km/liter. Berapakah liter bahan bakar yang dibutuhkan Rudi jika menempuh perjalanan Surabaya - Mojokerto - Surabaya? <span class="required">*</span>
+                    </label>
+                    <textarea id="question6" name="question6" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q6Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        7. Target bulan Mei adalah sebagai berikut:<br>
+                        - Impra = Rp. 75.000.000<br>
+                        - Kloset Global = Rp. 22.000.000<br>
+                        - Granit = Rp. 115.000.000<br>
+                        - Volk = Rp. 125.000.000<br>
+                        - Keramik = Rp. 205.000.000<br>
+                        Total = Rp. 542.000.000<br><br>
+                        Hitunglah:<br>
+                        a. Target penjualan per hari dalam 25 hari kerja<br>
+                        b. Target penjualan rata-rata ke setiap toko jika target Effective Call adalah 6toko per hari <span class="required">*</span>
+                    </label>
+                    <textarea id="question7" name="question7" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q7Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        8. Dalam 1dus keramik ukuran 40x40cm jika dipasang untuk lantai akan memiliki luas 0,96m2, hitunglah:<br>
+                        a. Berapa biji keramik dalam 1dus<br>
+                        b. Berapa dus keramik yang dibutuhkan untuk permukaan lantai dengan luas 112m2 <span class="required">*</span>
+                    </label>
+                    <textarea id="question8" name="question8" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q8Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        9. Semen instan Mortar Utama type 420 ukuran 25kg/sak jika diplikasikan untuk perekat keramik akan menghasilkan daya sebar seluas 5m2 dengan ketebalan 3mm. Jika suatu ruangan yang akan dipasang keramik mempunyai luas 300m2, berapa sak semen yang diperlukan untuk pekerjaan tersebut? <span class="required">*</span>
+                    </label>
+                    <textarea id="question9" name="question9" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q9Error"></div>
+                </div>
+
+                <div class="question">
+                    <label class="question-label">
+                        10. Kontribusi area terhadap suatu produk keramik adalah sebagai berikut:<br>
+                        - area SP sebesar 15%<br>
+                        - area SS1 sebesar 8,5%<br>
+                        - area Gresik1 sebesar 14,5%<br>
+                        - area SDA2 sebesar 12%<br>
+                        - area ST3 sebesar 28,5%<br>
+                        - area SB sebesar 21,5%<br><br>
+                        Hitunglah berapa besar nilai masing-masing area jika target penjualan keramik adalah Rp.1.330.225.000 <span class="required">*</span>
+                    </label>
+                    <textarea id="question10" name="question10" required placeholder="Tuliskan jawaban Anda di sini"></textarea>
+                    <div class="error-message" id="q10Error"></div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn">Kirim Jawaban</button>
+                <div class="success-message" id="successMessage">
+                    ✅ Terima kasih! Jawaban Anda telah berhasil dikirim dan tersimpan di database.
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // ============================================
+        // KONFIGURASI - GANTI URL INI DENGAN WEBHOOK N8N ANDA
+        // ============================================
+        const N8N_WEBHOOK_URL = 'https://localhost/webhook-test/sales-test';
+        
+        // Timer Configuration
+        const DURATION = 30 * 60; // 30 minutes in seconds
+        let timeRemaining = DURATION;
+        let timerInterval;
+        let startTime;
+
+        // Start timer when page loads
+        window.addEventListener('load', () => {
+            startTime = new Date();
+            startTimer();
+        });
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 5 * 60) {
+                    document.getElementById('timerSection').classList.add('warning');
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timer').textContent = display;
+        }
+
+        function handleTimeUp() {
+            alert('Waktu habis! Formulir akan dikumpulkan secara otomatis.');
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('timer').textContent = '00:00';
+            
+            const form = document.getElementById('essayForm');
+            if (validateForm()) {
+                submitForm();
+            } else {
+                alert('Mohon lengkapi semua field yang wajib diisi sebelum waktu habis!');
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            const nama = document.getElementById('nama').value.trim();
+            if (nama.length < 3) {
+                document.getElementById('namaError').textContent = 'Nama harus minimal 3 karakter';
+                isValid = false;
+            }
+
+            const posisi = document.getElementById('posisi').value.trim();
+            if (posisi.length < 2) {
+                document.getElementById('posisiError').textContent = 'Posisi harus diisi';
+                isValid = false;
+            }
+
+            for (let i = 1; i <= 10; i++) {
+                const answer = document.getElementById(`question${i}`).value.trim();
+                if (answer.length < 5) {
+                    document.getElementById(`q${i}Error`).textContent = 'Jawaban harus diisi minimal 5 karakter';
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        document.getElementById('essayForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                await submitForm();
+            } else {
+                alert('Mohon lengkapi semua field dengan benar');
+            }
+        });
+
+        async function submitForm() {
+            clearInterval(timerInterval);
+            
+            const endTime = new Date();
+            const timeUsed = Math.floor((endTime - startTime) / 1000);
+            const timeUsedFormatted = `${Math.floor(timeUsed / 60)}:${String(timeUsed % 60).padStart(2, '0')}`;
+
+            const formData = {
+                timestamp: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }),
+                nama: document.getElementById('nama').value,
+                posisi: document.getElementById('posisi').value,
+                question1: document.getElementById('question1').value,
+                question2: document.getElementById('question2').value,
+                question3: document.getElementById('question3').value,
+                question4: document.getElementById('question4').value,
+                question5: document.getElementById('question5').value,
+                question6: document.getElementById('question6').value,
+                question7: document.getElementById('question7').value,
+                question8: document.getElementById('question8').value,
+                question9: document.getElementById('question9').value,
+                question10: document.getElementById('question10').value,
+                timeUsed: timeUsedFormatted,
+                timeRemaining: timeRemaining > 0 ? `${Math.floor(timeRemaining / 60)}:${String(timeRemaining % 60).padStart(2, '0')}` : '00:00'
+            };
+
+            document.getElementById('loadingOverlay').style.display = 'flex';
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                document.getElementById('loadingOverlay').style.display = 'none';
+
+                if (response.ok) {
+                    document.getElementById('essayForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('timerSection').style.display = 'none';
+                } else {
+                    throw new Error('Gagal mengirim data');
+                }
+            } catch (error) {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim data. Data akan disimpan di console. Silakan hubungi administrator.');
+                console.log('Form Data:', formData);
+            }
+        }
+
+        window.addEventListener('beforeunload', (e) => {
+            if (timeRemaining > 0 && timeRemaining < DURATION) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
